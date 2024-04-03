@@ -97,3 +97,77 @@
           <tbody>
            <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>
            <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="toe"></td> <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>
+                       </td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td></tr>
+        </tbody>
+        </table>
+        <div class="btns">
+            <div>
+                <button id="solve-button">Solve</button>
+            </div>
+            <div>
+                <button id="clear-button">Clear board</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const solveButton = document.getElementById('solve-button');
+        const clearButton = document.getElementById('clear-button');
+        const sudokuBoard = document.getElementById('sudoku-board');
+
+        solveButton.addEventListener('click', solveSudoku);
+        clearButton.addEventListener('click', clearBoard);
+
+        function isValid(board, row, col, num) {
+            for (let i = 0; i < 9; i++) {
+                if (board[row][i] === num || board[i][col] === num) {
+                    return false;
+                }
+            }
+
+            const sqRow = Math.floor(row / 3);
+            const sqCol = Math.floor(col / 3);
+
+            for (let i = sqRow * 3; i < sqRow * 3 + 3; i++) {
+                for (let j = sqCol * 3; j < sqCol * 3 + 3; j++) {
+                    if (board[i][j] === num) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        function solveSudoku(board) {
+            let foundEmpty = false;
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    if (board[i][j] === 0) {
+                        foundEmpty = true;
+                        for (let num = 1; num <= 9; num++) {
+                            if (isValid(board, i, j, num)) {
+                                board[i][j] = num;
+                                if (solveSudoku(board)) {
+                                    return true;
+                                }
+                                board[i][j] = 0;
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
+            return foundEmpty === false;
+        }
+
+        function clearBoard() {
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    sudokuBoard.rows[i].cells[j].textContent = "";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+
